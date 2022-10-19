@@ -1,0 +1,142 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="float-end">
+                <button type="submit" form="form_payment" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fas fa-save"></i></button>
+                <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fas fa-reply"></i></a>
+            </div>
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                <li class="breadcrumb-item"><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-pencil-alt"></i> {{ text_edit }} <span class="float-sm-end">{{ text_info }}</span></div>
+            <div class="card-body">
+                <form action="{{ save }}" method="post" enctype="multipart/form-data" id="form_payment" data-oc-toggle="ajax">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a data-bs-toggle="tab" class="nav-link active">{{ tab_main }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_main">
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_front_name }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="payment_payunipayment_front_name" value="{{ payment_payunipayment_front_name }}" placeholder="{{ entry_front_name }}" id="input-front-name" class="form-control"/>
+                                        {% if error_front_name %}
+                                            <div class="text-danger">{{ error_front_name }}</div>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_status }}</label>
+                                    <div class="col-sm-10 align-self-center">
+                                        <div class="form-check-inline">
+                                            <label><input type="radio" class="form-check-input" name="payment_payunipayment_status" value="1" {{ "1" == payment_payunipayment_status ? "checked" : "" }}/> {{ text_enabled }}</label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label><input type="radio" class="form-check-input" name="payment_payunipayment_status" value="0" {{ "0" == payment_payunipayment_status ? "checked" : "" }}/> {{ text_disabled }}</label>
+                                        </div>
+                                        {% if error_test_mode %}
+                                            <div class="text-danger">{{ error_status }}</div>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_test_mode }}</label>
+                                    <div class="col-sm-10 align-self-center">
+                                        <div class="form-check-inline">
+                                            <label><input type="radio" class="form-check-input" name="payment_payunipayment_test_mode" value="1" {{ "1" == payment_payunipayment_test_mode ? "checked" : "" }}/> {{ text_enabled }}</label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label><input type="radio" class="form-check-input" name="payment_payunipayment_test_mode" value="0" {{ "0" == payment_payunipayment_test_mode ? "checked" : "" }}/> {{ text_disabled }}</label>
+                                        </div>
+                                        {% if error_test_mode %}
+                                            <div class="text-danger">{{ error_test_mode }}</div>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_merchant_id }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="payment_payunipayment_merchant_id" value="{{ payment_payunipayment_merchant_id }}" placeholder="{{ entry_merchant_id }}" id="input-merchant-id" class="form-control"/>
+                                        {% if error_merchant_id %}
+                                            <div class="text-danger">{{ error_merchant_id }}</div>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_hash_key }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="payment_payunipayment_hash_key" value="{{ payment_payunipayment_hash_key }}" placeholder="{{ entry_hash_key }}" id="input-hash-key" class="form-control"/>
+                                        {% if error_hash_key %}
+                                            <div class="text-danger">{{ error_hash_key }}</div>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_hash_iv }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="payment_payunipayment_hash_iv" value="{{ payment_payunipayment_hash_iv }}" placeholder="{{ entry_hash_iv }}" id="input-hash-iv" class="form-control"/>
+                                        {% if error_hash_iv %}
+                                            <div class="text-danger">{{ error_hash_iv }}</div>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_item_info }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="payment_payunipayment_item_info" value="{{ payment_payunipayment_item_info }}" placeholder="{{ entry_item_info }}" id="input-item-info" class="form-control"/>
+                                        {% if error_item_info %}
+                                            <div class="text-danger">{{ error_item_info }}</div>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_order_status }}</label>
+                                    <div class="col-sm-10">
+                                        <select name="payment_payunipayment_order_status" id="input-order-status" class="form-select">
+                                            <option value="0">{{ text_none }}</option>
+                                            {% for item in order_status_all %}
+                                                <option value="{{ item.order_status_id }}" {{ item.order_status_id == payment_payunipayment_order_status ? "selected" : "" }}>{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_order_finish_status }}</label>
+                                    <div class="col-sm-10">
+                                        <select name="payment_payunipayment_order_finish_status" id="input-order-finish-status" class="form-select">
+                                            <option value="0">{{ text_none }}</option>
+                                            {% for item in order_status_all %}
+                                                <option value="{{ item.order_status_id }}" {{ item.order_status_id == payment_payunipayment_order_finish_status ? "selected" : "" }}>{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_order_fail_status }}</label>
+                                    <div class="col-sm-10">
+                                        <select name="payment_payunipayment_order_fail_status" id="input-order-fail-status" class="form-select">
+                                            <option value="0">{{ text_none }}</option>
+                                            {% for item in order_status_all %}
+                                                <option value="{{ item.order_status_id }}" {{ item.order_status_id == payment_payunipayment_order_fail_status ? "selected" : "" }}>{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="input-front-name">{{ entry_sort_order }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="payment_payunipayment_sort_order" value="{{ payment_payunipayment_sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control"/>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>

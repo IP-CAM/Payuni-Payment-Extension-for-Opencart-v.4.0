@@ -1,0 +1,28 @@
+<form action="{{ action }}" method="post" id="payuni_form">
+    {% for name, value in params %}
+        <input type="hidden" name="{{ name }}" value="{{ value }}">
+    {% endfor %}
+</form>
+<div id="squareup-notification">
+    <div class="text-center alert alert-info"><i class="fa fa-shopping-cart"></i>&nbsp;{{ item_info }}</div>
+</div>
+<div class="buttons">
+    <div class="d-inline-block pt-2 pd-2 w-100 text-end">
+        <input type="button" value="{{ button_confirm }}" id="button-confirm" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
+    </div>
+</div>
+<script type="text/javascript"><!--
+    $('#button-confirm').on('click', function() {
+        $.ajax({
+            type: 'GET',
+            url: 'index.php?route=extension/payunipayment/payment/payunipayment|confirm',
+            dataType: 'json',
+            beforeSend: function() {
+                $('#button-confirm').button('loading');
+            },
+            success: function(json) {
+                $('#payuni_form').submit();
+            },
+        });
+    });
+//--></script>
