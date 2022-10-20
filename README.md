@@ -24,14 +24,17 @@ PAYUNi 統一金流 OpenCart 4.0 模組
 
 #### 上傳模組
 `OpenCart後台` -> `擴充模組安裝(Extension Installer)`，上傳 `payunipayment.ocmod.zip` -> 已安裝列表出現統一金流模組 -> 點擊右方安裝按鈕。
+![](https://raw.githubusercontent.com/payuni/sample_picture/main/opencart4/opencart4_add.png)
 
 設定
 -----------------
 
 **啟用**
-- `OpenCart後台` -> `擴充模組管理(Extension)` -> `選擇擴充模組類別(Choose the extension type)` -> `支付模組(Payments)` -> `PAYUNi 統一金流`，點選右邊 `安裝(Install)` 按鈕。
+- `OpenCart後台` -> `擴充模組管理(Extension)` -> `選擇擴充模組類別(Choose the extension type)` -> `付款模組(Payments)` -> `PAYUNi 統一金流`，點選右邊 `安裝(Install)` 按鈕。
 - 安裝後再點選 `編輯(Edit)` 按鈕。
+![](https://raw.githubusercontent.com/payuni/sample_picture/main/opencart4/opencart4_install.png)
 - 請登入[PAYUNi平台](https://www.payuni.com.tw/)檢視商店串接資訊取得商店代號、 Hash Key 及 Hash IV 並依序填入。
+![](https://raw.githubusercontent.com/payuni/sample_picture/main/opencart4/opencart4_admin_page.png)
 - 完成後記得儲存設定。
 
 **注意事項**
