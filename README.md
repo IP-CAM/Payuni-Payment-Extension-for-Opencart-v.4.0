@@ -23,7 +23,7 @@ PAYUNi 統一金流 OpenCart 4.0 模組
 `Release頁面` -> 最新版本的`Assets` -> 下載 `payunipayment.ocmod.zip`。
 
 #### 上傳模組
-`OpenCart後台` -> `擴充模組安裝(Extension Installer)`，上傳 payunipayment.ocmod.zip -> 已安裝列表出現統一金流模組 -> 點擊右方安裝按鈕。
+`OpenCart後台` -> `擴充模組安裝(Extension Installer)`，上傳 `payunipayment.ocmod.zip` -> 已安裝列表出現統一金流模組 -> 點擊右方安裝按鈕。
 
 設定
 -----------------
