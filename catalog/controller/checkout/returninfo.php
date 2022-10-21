@@ -80,7 +80,7 @@ class ReturnInfo extends \Opencart\System\Engine\Controller {
         );
 
         if ($this->customer->isLogged()) {
-            $data['text_message'] = $this->SetNotice($encryptInfo);
+            $data['text_message'] = $this->payunipayment->SetNotice($encryptInfo);
         } else {
             $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact', 'language=' . $this->config->get('config_language')));
         }
