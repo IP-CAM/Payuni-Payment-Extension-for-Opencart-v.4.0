@@ -225,12 +225,6 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         if (empty($this->request->post[$this->prefix . 'payunipayment_front_name'])) {
             $this->error['warning'] = $this->language->get('error_front_name');
         }
-        if (empty($this->request->post[$this->prefix . 'payunipayment_status'])) {
-            $this->error['warning'] = $this->language->get('error_status');
-        }
-        if (empty($this->request->post[$this->prefix . 'payunipayment_test_mode'])) {
-            $this->error['warning'] = $this->language->get('error_test_mode');
-        }
         if (empty($this->request->post[$this->prefix . 'payunipayment_merchant_id'])) {
             $this->error['warning'] = $this->language->get('error_merchant_id');
         }
