@@ -59,10 +59,18 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
      */
     private function uppOnePointHandler() {
         // 訂單資料
-        $orderInfo = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $orderInfo    = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        // 商品資料
+        $productsInfo = $this->model_checkout_order->getProducts($this->session->data['order_id']);
+        $prodDesc     = [];
+        foreach ($productsInfo as $product) {
+            $prodDesc[] = $product['name'] . ' * ' . $product['quantity'];
+        }
+
         $encryptInfo = [
             'MerID'      => $this->configSetting['merchant_id'],
             'MerTradeNo' => $orderInfo['order_id'],
+            'ProdDesc'   => implode(';', $prodDesc),
             'TradeAmt'   => (int) $orderInfo['total'],
             'ReturnURL'  => $this->url->link('extension/payunipayment/checkout/returninfo'), //幕前
             'NotifyURL'  => $this->url->link('extension/payunipayment/checkout/notify'), //幕後
