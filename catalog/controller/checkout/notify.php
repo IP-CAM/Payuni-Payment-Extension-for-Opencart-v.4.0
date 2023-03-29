@@ -60,28 +60,33 @@ class Notify extends \Opencart\System\Engine\Controller {
             exit();
         }
 
-        // 3. 檢查訂單狀態是否為已付款
-        if ($encryptInfo['TradeStatus'] == '1') {
-            $msg = $orderInfo['order_id'] . ' OK';  //訂單成功
-  
-            // 已付款，更新訂單狀態並寫入訂單歷程
-            $this->model_checkout_order->addHistory(
-                $orderInfo['order_id'],
-                $this->configSetting['order_finish_status'],
-                $this->payunipayment->SetNotice($encryptInfo),
-                true
-            );
+        // 3. 檢查訂單狀態
+        switch ($encryptInfo['TradeStatus']) {
+            case '0':
+                $msg = $orderInfo['order_id'] . ' Pending';  //訂單未付款
 
-        } else {
-            $msg = "錯誤: 訂單付款失敗";
+                // 訂單未付款，更新訂單狀態並寫入訂單歷程
+                $this->model_checkout_order->addHistory(
+                    $orderInfo['order_id'],
+                    2, // 待付款
+                    $this->payunipayment->SetNotice($encryptInfo),
+                    true
+                );
+                break;
+            case '1':
+                $msg = $orderInfo['order_id'] . ' OK';  //訂單成功
 
-            // 付款失敗，更新訂單狀態並寫入訂單歷程
-            $this->model_checkout_order->addHistory(
-                $orderInfo['order_id'],
-                $this->configSetting['order_fail_status'],
-                $msg,
-                true
-            );
+                // 已付款，更新訂單狀態並寫入訂單歷程
+                $this->model_checkout_order->addHistory(
+                    $orderInfo['order_id'],
+                    $this->configSetting['order_finish_status'],
+                    $this->payunipayment->SetNotice($encryptInfo),
+                    true
+                );
+                break;
+            default:
+                $msg = '';
+                break;
         }
 
         $this->payunipayment->writeLog($msg);

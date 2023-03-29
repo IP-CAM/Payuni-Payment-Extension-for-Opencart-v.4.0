@@ -47,20 +47,6 @@ class ReturnInfo extends \Opencart\System\Engine\Controller {
             unset($this->session->data['vouchers']);
         }
 
-        // 訂單付款明細寫入歷程
-        $this->load->model('checkout/order');
-        $orderInfo = $this->model_checkout_order->getOrder($encryptInfo['MerTradeNo']);
-
-        // 訂單是待處理狀態才更新歷程
-        if ( $orderInfo['order_status_id'] == $this->configSetting['order_status'] ) {
-            $this->model_checkout_order->addHistory(
-                $orderInfo['order_id'],
-                2, // 待付款
-                $this->payunipayment->SetNotice($encryptInfo),
-                true
-            );
-        }
-
         // 顯示的 Title
         $title = ($encryptInfo['Status'] == 'SUCCESS') ? $this->language->get('heading_title') : $this->language->get('heading_title_fail') . $encryptInfo['Message'];
 
