@@ -42,7 +42,8 @@ class Payunipayment {
         $message   = "<<<code>統一金流 PAYUNi</code>>>";
         switch ($encryptInfo['PaymentType']){
             case '1': // 信用卡
-                $authType = [1=>'一次', 2=>'分期', 3=>'紅利', 7=>'銀聯'];
+                $authType = [0=>'無', 1=>'一次', 2=>'分期', 3=>'紅利', 4=>'Apple Pay', 5=>'Google Pay', 6=>'Samsung Pay', 7=>'銀聯'];
+                $encryptInfo['AuthType'] = (array_key_exists($encryptInfo['AuthType'], $authType)) ? $encryptInfo['AuthType'] : 0 ;
                 $message .= "</br>授權狀態：" . $encryptInfo['Message'];
                 $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
                 $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
