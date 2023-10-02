@@ -1,13 +1,17 @@
 <?php
-namespace Opencart\System\Library;
-class Payunipayment {
 
-	private $error = array();
+namespace Opencart\System\Library;
+
+class Payunipayment
+{
+
+    private $error = array();
     private $prefix;
     private $config;
     private $configSetting = array();
 
-	public function __construct($config) {
+    public function __construct($config)
+    {
 
         $this->config = $config;
         $this->prefix = (version_compare(VERSION, '3.0', '>=')) ? 'payment_' : '';
@@ -26,24 +30,25 @@ class Payunipayment {
                 'sort_order'          => $this->config->get($this->prefix . 'payunipayment_sort_order'),
             ];
         }
+    }
 
-	}
-
-    public function getConfigSetting() {
-    	return $this->configSetting;
+    public function getConfigSetting()
+    {
+        return $this->configSetting;
     }
 
     /**
      * 產生訊息內容
      * return string
      */
-    public function SetNotice(Array $encryptInfo) {
-        $trdStatus = ['待付款','已付款','付款失敗','付款取消'];
+    public function SetNotice(array $encryptInfo)
+    {
+        $trdStatus = ['待付款', '已付款', '付款失敗', '付款取消'];
         $message   = "<<<code>統一金流 PAYUNi</code>>>";
-        switch ($encryptInfo['PaymentType']){
+        switch ($encryptInfo['PaymentType']) {
             case '1': // 信用卡
-                $authType = [0=>'無', 1=>'一次', 2=>'分期', 3=>'紅利', 4=>'Apple Pay', 5=>'Google Pay', 6=>'Samsung Pay', 7=>'銀聯'];
-                $encryptInfo['AuthType'] = (array_key_exists($encryptInfo['AuthType'], $authType)) ? $encryptInfo['AuthType'] : 0 ;
+                $authType = [0 => '無', 1 => '一次', 2 => '分期', 3 => '紅利', 4 => 'Apple Pay', 5 => 'Google Pay', 6 => 'Samsung Pay', 7 => '銀聯'];
+                $encryptInfo['AuthType'] = (array_key_exists($encryptInfo['AuthType'], $authType)) ? $encryptInfo['AuthType'] : 0;
                 $message .= "</br>授權狀態：" . $encryptInfo['Message'];
                 $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
                 $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
@@ -68,10 +73,10 @@ class Payunipayment {
                 $message .= "</br>繳費截止時間：" . $encryptInfo['ExpireDate'];
                 break;
             case '3': // 超商代碼
-                $store = ['SEVEN' => '統一超商 (7-11)'];
+                $store = ['SEVEN' => '統一超商 (7-11)', '7-ELEVEN' => '統一超商 (7-11)'];
                 $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
                 $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
-                $message .= "</br>繳費方式：" . $store[$encryptInfo['Store']];
+                $message .= "</br>繳費方式：" . (isset($store[$encryptInfo['Store']])) ? $store[$encryptInfo['Store']] : '';
                 $message .= "</br>繳費代號：" . $encryptInfo['PayNo'];
                 $message .= "</br>繳費截止時間：" . $encryptInfo['ExpireDate'];
                 break;
@@ -94,47 +99,46 @@ class Payunipayment {
      * @ author    Yifan
      * @ dateTime 2022-08-26
      */
-    public function ResultProcess($result) {
+    public function ResultProcess($result)
+    {
         $msg = '';
         if (is_array($result)) {
             $resultArr = $result;
-        }
-        else {
+        } else {
             $resultArr = json_decode($result, true);
-            if (!is_array($resultArr)){
+            if (!is_array($resultArr)) {
                 $msg = 'Result must be an array';
                 $this->writeLog($msg);
                 return ['success' => false, 'message' => $msg];
             }
         }
-        if (isset($resultArr['EncryptInfo'])){
-            if (isset($resultArr['HashInfo'])){
+        if (isset($resultArr['EncryptInfo'])) {
+            if (isset($resultArr['HashInfo'])) {
                 $chkHash = $this->HashInfo($resultArr['EncryptInfo']);
-                if ( $chkHash != $resultArr['HashInfo'] ) {
+                if ($chkHash != $resultArr['HashInfo']) {
                     $msg = 'Hash mismatch';
                     $this->writeLog($msg);
                     return ['success' => false, 'message' => $msg];
                 }
                 $resultArr['EncryptInfo'] = $this->Decrypt($resultArr['EncryptInfo']);
                 return ['success' => true, 'message' => $resultArr];
-            }
-            else {
+            } else {
                 $msg = 'missing HashInfo';
                 $this->writeLog($msg);
                 return ['success' => false, 'message' => $msg];
             }
-        }
-        else {
+        } else {
             $msg = 'missing EncryptInfo';
             $this->writeLog($msg);
             return ['success' => false, 'message' => $msg];
         }
     }
 
-	/**
+    /**
      * 加密
      */
-    public function Encrypt($encryptInfo) {
+    public function Encrypt($encryptInfo)
+    {
         $tag = '';
         $encrypted = openssl_encrypt(http_build_query($encryptInfo), 'aes-256-gcm', trim($this->configSetting['hash_key']), 0, trim($this->configSetting['hash_iv']), $tag);
         return trim(bin2hex($encrypted . ':::' . base64_encode($tag)));
@@ -143,7 +147,8 @@ class Payunipayment {
     /**
      * 解密
      */
-    public function Decrypt(string $encryptStr = '') {
+    public function Decrypt(string $encryptStr = '')
+    {
         list($encryptData, $tag) = explode(':::', hex2bin($encryptStr), 2);
         $encryptInfo = openssl_decrypt($encryptData, 'aes-256-gcm', trim($this->configSetting['hash_key']), 0, trim($this->configSetting['hash_iv']), base64_decode($tag));
         parse_str($encryptInfo, $encryptArr);
@@ -153,8 +158,9 @@ class Payunipayment {
     /**
      * hash
      */
-    public function HashInfo(string $encryptStr = '') {
-        return strtoupper(hash('sha256', $this->configSetting['hash_key'].$encryptStr.$this->configSetting['hash_iv']));
+    public function HashInfo(string $encryptStr = '')
+    {
+        return strtoupper(hash('sha256', $this->configSetting['hash_key'] . $encryptStr . $this->configSetting['hash_iv']));
     }
 
     /**
@@ -163,7 +169,7 @@ class Payunipayment {
     public function writeLog($msg = '', $with_input = true)
     {
         $file_path = DIR_LOGS; // 檔案路徑
-        if(! is_dir($file_path)) {
+        if (!is_dir($file_path)) {
             return;
         }
 
