@@ -11,13 +11,13 @@ PAYUNi 統一金流 OpenCart 4.0 模組
 
 支援版本
 -----------------------
-releases tag v1.1.X
+[releases tag v1.1.X](https://github.com/payuni/OpenCart4.0/releases/tag/v1.1.0)
 
 | OpenCart | PHP |
 | :---------: | :---------: |
 | 4.0.2.3 | >8.0 |
 
-releases tag  v1.0.X
+[releases tag  v1.0.6](https://github.com/payuni/OpenCart4.0/releases/tag/v1.0.6)
 | OpenCart | PHP |
 | :---------: | :---------: |
 | 4.0.1.1 | 8.1.10 |
