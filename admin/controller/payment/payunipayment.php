@@ -1,20 +1,25 @@
 <?php
-namespace Opencart\Admin\Controller\Extension\Payunipayment\Payment;
-class Payunipayment extends \Opencart\System\Engine\Controller {
 
-	private $version = '1.0';
-	private $error = [];
+namespace Opencart\Admin\Controller\Extension\Payunipayment\Payment;
+
+class Payunipayment extends \Opencart\System\Engine\Controller
+{
+
+    private $version = '1.0';
+    private $error = [];
     private $prefix;
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
         $this->prefix = (version_compare(VERSION, '3.0', '>=')) ? 'payment_' : '';
     }
-	
-	public function index(): void {
-		$this->load->language('extension/payunipayment/payment/payunipayment');
-		
-		$this->document->setTitle($this->language->get('heading_title'));
+
+    public function index(): void
+    {
+        $this->load->language('extension/payunipayment/payment/payunipayment');
+
+        $this->document->setTitle($this->language->get('heading_title'));
 
         if (isset($this->request->get['store_id'])) {
             $store_id = $this->request->get['store_id'];
@@ -23,30 +28,30 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         }
         $this->load->model('setting/setting');
 
-		$data['breadcrumbs'] = [];
+        $data['breadcrumbs'] = [];
 
-		$data['breadcrumbs'][] = [
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'])
-		];
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'])
+        ];
 
-		$data['breadcrumbs'][] = [
-			'text' => $this->language->get('text_extension'),
-			'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment')
-		];
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_extension'),
+            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment')
+        ];
 
-		$data['breadcrumbs'][] = [
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('extension/payunipayment/payment/payunipayment', 'user_token=' . $this->session->data['user_token'])
-		];
-		
-		$data['save'] = $this->url->link('extension/payunipayment/payment/payunipayment|save', 'user_token=' . $this->session->data['user_token']);
-		$data['back'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment');
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('extension/payunipayment/payment/payunipayment', 'user_token=' . $this->session->data['user_token'])
+        ];
 
-		$data['text_info'] = sprintf($this->language->get('text_info'), $this->version);
-		
-		$data['server'] = HTTP_SERVER;
-		$data['catalog'] = HTTP_CATALOG;
+        $data['save'] = $this->url->link('extension/payunipayment/payment/payunipayment.save', 'user_token=' . $this->session->data['user_token']);
+        $data['back'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment');
+
+        $data['text_info'] = sprintf($this->language->get('text_info'), $this->version);
+
+        $data['server'] = HTTP_SERVER;
+        $data['catalog'] = HTTP_CATALOG;
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -95,7 +100,7 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         } else {
             $data['success'] = '';
         }
-		
+
         $setting = $this->model_setting_setting->getSetting($this->prefix . 'payunipayment', $store_id);
         if (isset($this->request->post[$this->prefix . 'payunipayment_front_name'])) {
             $data[$this->prefix . 'payunipayment_front_name'] = $this->request->post[$this->prefix . 'payunipayment_front_name'];
@@ -139,8 +144,8 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         $data['order_status_all'] = array();
 
 
-        if ($order_status_all) { 
-            foreach ($order_status_all as $item) { 
+        if ($order_status_all) {
+            foreach ($order_status_all as $item) {
                 $data['order_status_all'][] = array(
                     'order_status_id' => $item['order_status_id'],
                     'name' => $item['name']
@@ -158,8 +163,8 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         $data['order_status_all'] = array();
 
 
-        if ($order_status_all) { 
-            foreach ($order_status_all as $item) { 
+        if ($order_status_all) {
+            foreach ($order_status_all as $item) {
                 $data['order_status_all'][] = array(
                     'order_status_id' => $item['order_status_id'],
                     'name' => $item['name']
@@ -177,8 +182,8 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         $data['order_status_all'] = array();
 
 
-        if ($order_status_all) { 
-            foreach ($order_status_all as $item) { 
+        if ($order_status_all) {
+            foreach ($order_status_all as $item) {
                 $data['order_status_all'][] = array(
                     'order_status_id' => $item['order_status_id'],
                     'name' => $item['name']
@@ -194,30 +199,32 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
             $data[$this->prefix . 'payunipayment_sort_order'] = $this->request->post[$this->prefix . 'payunipayment_sort_order'];
         } else {
             $data[$this->prefix . 'payunipayment_sort_order'] = isset($setting[$this->prefix . 'payunipayment_sort_order']) ? $setting[$this->prefix . 'payunipayment_sort_order'] : '';
-        }   
+        }
 
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
 
-		$this->response->setOutput($this->load->view('extension/payunipayment/payment/payunipayment', $data));
-	}
-	
-	public function save(): void {
-		$this->load->language('extension/payunipayment/payment/payunipayment');
+        $this->response->setOutput($this->load->view('extension/payunipayment/payment/payunipayment', $data));
+    }
+
+    public function save(): void
+    {
+        $this->load->language('extension/payunipayment/payment/payunipayment');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting($this->prefix . 'payunipayment', $this->request->post);
             $data['success'] = $this->language->get('text_success');
         }
-		
-		$data['error'] = $this->error;
-		
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($data));
-	}
 
-    protected function validate() {
+        $data['error'] = $this->error;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+    protected function validate()
+    {
         if (!$this->user->hasPermission('modify', 'extension/payunipayment/payment/payunipayment')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -245,6 +252,7 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         return !$this->error;
     }
 
-	public function install() {
-	}
+    public function install()
+    {
+    }
 }

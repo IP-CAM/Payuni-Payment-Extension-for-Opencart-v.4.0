@@ -15,7 +15,7 @@
     $('#button-confirm').on('click', function() {
         $.ajax({
             type: 'GET',
-            url: 'index.php?route=extension/payunipayment/payment/payunipayment|confirm',
+            url: 'index.php?route=extension/payunipayment/payment/payunipayment.confirm',
             dataType: 'json',
             beforeSend: function() {
                 $('#button-confirm').button('loading');

@@ -1,12 +1,16 @@
 <?php
+
 namespace Opencart\Catalog\Controller\Extension\Payunipayment\Checkout;
-class Notify extends \Opencart\System\Engine\Controller {
+
+class Notify extends \Opencart\System\Engine\Controller
+{
 
     private $error = array();
     private $configSetting = array();
     private $payunipayment;
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
         // library
         $_config = new \Opencart\System\Engine\Config();
@@ -18,8 +22,8 @@ class Notify extends \Opencart\System\Engine\Controller {
         $this->configSetting = $this->payunipayment->getConfigSetting();
     }
 
-	public function index(): void {
-        
+    public function index(): void
+    {
         // 交易結果
         $result = $this->payunipayment->ResultProcess($_POST);
 
@@ -91,5 +95,5 @@ class Notify extends \Opencart\System\Engine\Controller {
 
         $this->payunipayment->writeLog($msg);
         exit(true);
-	}
+    }
 }

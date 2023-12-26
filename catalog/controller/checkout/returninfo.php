@@ -1,12 +1,16 @@
 <?php
+
 namespace Opencart\Catalog\Controller\Extension\Payunipayment\Checkout;
-class ReturnInfo extends \Opencart\System\Engine\Controller {
+
+class ReturnInfo extends \Opencart\System\Engine\Controller
+{
 
     private $error = array();
     private $configSetting = array();
     private $payunipayment;
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
         // library
         $_config = new \Opencart\System\Engine\Config();
@@ -18,7 +22,8 @@ class ReturnInfo extends \Opencart\System\Engine\Controller {
         $this->configSetting = $this->payunipayment->getConfigSetting();
     }
 
-    public function index(): void {
+    public function index(): void
+    {
 
         // 交易結果
         $result = $this->payunipayment->ResultProcess($_POST);
@@ -28,8 +33,7 @@ class ReturnInfo extends \Opencart\System\Engine\Controller {
         /**
          * 頁面資料
          */
-        $this->language->load('checkout/success');
-        $this->language->load('checkout/success_error');
+        $this->load->language('extension/payunipayment/payment/payunipayment');
 
         if (isset($this->session->data['order_id'])) {
             $this->cart->clear();
@@ -48,7 +52,7 @@ class ReturnInfo extends \Opencart\System\Engine\Controller {
         }
 
         // 顯示的 Title
-        $title = ($encryptInfo['Status'] == 'SUCCESS') ? $this->language->get('heading_title') : $this->language->get('heading_title_fail') . $encryptInfo['Message'];
+        $title = ($encryptInfo['Status'] == 'SUCCESS') ? $this->language->get('heading_title_succ') : $this->language->get('heading_title_fail') . $encryptInfo['Message'];
 
         $this->document->setTitle($title);
 
@@ -91,5 +95,5 @@ class ReturnInfo extends \Opencart\System\Engine\Controller {
         $data['heading_title']  = $title;
 
         $this->response->setOutput($this->load->view('common/success', $data));
-	}
+    }
 }

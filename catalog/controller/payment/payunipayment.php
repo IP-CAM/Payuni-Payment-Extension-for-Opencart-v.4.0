@@ -1,18 +1,22 @@
 <?php
+
 namespace Opencart\Catalog\Controller\Extension\Payunipayment\Payment;
-class Payunipayment extends \Opencart\System\Engine\Controller {
+
+class Payunipayment extends \Opencart\System\Engine\Controller
+{
 
     private $error = array();
     private $configSetting = array();
     private $payunipayment;
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
 
-		if (version_compare(phpversion(), '7.1', '>=')) {
-			ini_set('precision', 14);
-			ini_set('serialize_precision', 14);
-		}
+        if (version_compare(phpversion(), '7.1', '>=')) {
+            ini_set('precision', 14);
+            ini_set('serialize_precision', 14);
+        }
 
         // library
         $_config = new \Opencart\System\Engine\Config();
@@ -23,8 +27,9 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
 
         $this->configSetting = $this->payunipayment->getConfigSetting();
     }
-	
-	public function index(): string {
+
+    public function index(): string
+    {
 
         // Test Mode
         if ($this->configSetting['test_mode'] == 1) {
@@ -37,15 +42,16 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
         $data['item_info'] = $this->configSetting['item_info'];
 
         return $this->load->view('extension/payunipayment/payment/payunipayment', $data);
-	}
+    }
 
-    public function confirm() {
+    public function confirm()
+    {
         $json = array();
-            if ($this->session->data['payment_method'] == 'payunipayment') {
-                $this->load->model('checkout/order');
-                $this->model_checkout_order->addHistory($this->session->data['order_id'], $this->configSetting['order_status']);
-                $json['redirect'] = $this->url->link('checkout/success');
-            }
+        if ($this->session->data['payment_method'] == 'payunipayment') {
+            $this->load->model('checkout/order');
+            $this->model_checkout_order->addHistory($this->session->data['order_id'], $this->configSetting['order_status']);
+            $json['redirect'] = $this->url->link('checkout/success');
+        }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -57,7 +63,8 @@ class Payunipayment extends \Opencart\System\Engine\Controller {
      * @version 1.0
      * @return array
      */
-    private function uppOnePointHandler() {
+    private function uppOnePointHandler()
+    {
         // 訂單資料
         $orderInfo    = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         // 商品資料

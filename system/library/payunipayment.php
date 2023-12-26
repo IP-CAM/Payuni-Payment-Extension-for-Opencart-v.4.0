@@ -44,52 +44,59 @@ class Payunipayment
     public function SetNotice(array $encryptInfo)
     {
         $trdStatus = ['待付款', '已付款', '付款失敗', '付款取消'];
-        $message   = "<<<code>統一金流 PAYUNi</code>>>";
-        switch ($encryptInfo['PaymentType']) {
-            case '1': // 信用卡
-                $authType = [0 => '無', 1 => '一次', 2 => '分期', 3 => '紅利', 4 => 'Apple Pay', 5 => 'Google Pay', 6 => 'Samsung Pay', 7 => '銀聯'];
-                $encryptInfo['AuthType'] = (array_key_exists($encryptInfo['AuthType'], $authType)) ? $encryptInfo['AuthType'] : 0;
-                $message .= "</br>授權狀態：" . $encryptInfo['Message'];
-                $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
-                $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
-                $message .= "</br>卡號：" . $encryptInfo['Card6No'] . '******' . $encryptInfo['Card4No'];
-                if ($encryptInfo['CardInst'] > 1) {
-                    $message .= "</br>分期數：" . $encryptInfo['CardInst'];
-                    $message .= "</br>首期金額：" . $encryptInfo['FirstAmt'];
-                    $message .= "</br>每期金額：" . $encryptInfo['EachAmt'];
-                }
-                $message .= "</br>授權碼：" . $encryptInfo['AuthCode'];
-                $message .= "</br>授權銀行代號：" . $encryptInfo['AuthBank'];
-                $message .= "</br>授權銀行：" . $encryptInfo['AuthBankName'];
-                $message .= "</br>授權類型：" . $authType[$encryptInfo['AuthType']];
-                $message .= "</br>授權日期：" . $encryptInfo['AuthDay'];
-                $message .= "</br>授權時間：" . $encryptInfo['AuthTime'];
-                break;
-            case '2': // atm轉帳
-                $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
-                $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
-                $message .= "</br>銀行代碼：" . $encryptInfo['BankType'];
-                $message .= "</br>繳費帳號：" . $encryptInfo['PayNo'];
-                $message .= "</br>繳費截止時間：" . $encryptInfo['ExpireDate'];
-                break;
-            case '3': // 超商代碼
-                $store = ['SEVEN' => '統一超商 (7-11)', '7-ELEVEN' => '統一超商 (7-11)'];
-                $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
-                $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
-                $message .= "</br>繳費方式：" . (isset($store[$encryptInfo['Store']])) ? $store[$encryptInfo['Store']] : '';
-                $message .= "</br>繳費代號：" . $encryptInfo['PayNo'];
-                $message .= "</br>繳費截止時間：" . $encryptInfo['ExpireDate'];
-                break;
-            case '6': // ICP 愛金卡
-                $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
-                $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
-                $message .= "</br>愛金卡交易序號：" . $encryptInfo['PayNo'];
-                $message .= "</br>付款日期時間：" . $encryptInfo['PayTime'];
-                break;
-            default: // 預設顯示資訊
-                $message .= "</br>訂單狀態：" . $trdStatus[$encryptInfo['TradeStatus']];
-                $message .= "</br>UNi序號：" . $encryptInfo['TradeNo'];
-                break;
+        $message   = '';
+        $TradeStatus = (isset($encryptInfo['TradeStatus'])) ? $trdStatus[$encryptInfo['TradeStatus']] : '';
+        $TradeNo     = (isset($encryptInfo['TradeNo'])) ? $encryptInfo['TradeNo'] : '';
+        $PayNo       = (isset($encryptInfo['PayNo'])) ? $encryptInfo['PayNo'] : '';
+        $ExpireDate  = (isset($encryptInfo['ExpireDate'])) ? $encryptInfo['ExpireDate'] : '';
+        if (isset($encryptInfo['PaymentType'])) {
+            $message   = "<<<code>統一金流 PAYUNi</code>>>";
+            switch ($encryptInfo['PaymentType']) {
+                case '1': // 信用卡
+                    $authType = [0 => '無', 1 => '一次', 2 => '分期', 3 => '紅利', 4 => 'Apple Pay', 5 => 'Google Pay', 6 => 'Samsung Pay', 7 => '銀聯'];
+                    $encryptInfo['AuthType'] = (array_key_exists($encryptInfo['AuthType'], $authType)) ? $encryptInfo['AuthType'] : 0;
+                    $message .= "</br>授權狀態：" . $encryptInfo['Message'];
+                    $message .= "</br>訂單狀態：" . $TradeStatus;
+                    $message .= "</br>UNi序號：" . $TradeNo;
+                    $message .= "</br>卡號：" . ((isset($encryptInfo['Card6No'])) ? $encryptInfo['Card6No'] . '******' . $encryptInfo['Card4No'] : '');
+                    if ($encryptInfo['CardInst'] > 1 && isset($encryptInfo['CardInst'])) {
+                        $message .= "</br>分期數：" . ((isset($encryptInfo['CardInst'])) ? $encryptInfo['CardInst'] : '');
+                        $message .= "</br>首期金額：" . ((isset($encryptInfo['FirstAmt'])) ? $encryptInfo['FirstAmt'] : '');
+                        $message .= "</br>每期金額：" . ((isset($encryptInfo['TradeNo'])) ? $encryptInfo['TradeNo'] : '');
+                    }
+                    $message .= "</br>授權碼：" . ((isset($encryptInfo['AuthCode'])) ? $encryptInfo['AuthCode'] : '');
+                    $message .= "</br>授權銀行代號：" . ((isset($encryptInfo['AuthBank'])) ? $encryptInfo['AuthBank'] : '');
+                    $message .= "</br>授權銀行：" . ((isset($encryptInfo['AuthBankName'])) ? $encryptInfo['AuthBankName'] : '');
+                    $message .= "</br>授權類型：" . ((isset($encryptInfo['AuthType'])) ? $authType[$encryptInfo['AuthType']] : '');
+                    $message .= "</br>授權日期：" . ((isset($encryptInfo['AuthDay'])) ? $encryptInfo['AuthDay'] : '');
+                    $message .= "</br>授權時間：" . ((isset($encryptInfo['AuthTime'])) ? $encryptInfo['AuthTime'] : '');
+                    break;
+                case '2': // atm轉帳
+                    $message .= "</br>訂單狀態：" . $TradeStatus;
+                    $message .= "</br>UNi序號：" . $TradeNo;
+                    $message .= "</br>銀行代碼：" . ((isset($encryptInfo['BankType'])) ? $encryptInfo['BankType'] : '');
+                    $message .= "</br>繳費帳號：" . $PayNo;
+                    $message .= "</br>繳費截止時間：" . $ExpireDate;
+                    break;
+                case '3': // 超商代碼
+                    $store = ['SEVEN' => '統一超商 (7-11)', '7-ELEVEN' => '統一超商 (7-11)'];
+                    $message .= "</br>訂單狀態：" . $TradeStatus;
+                    $message .= "</br>UNi序號：" . $TradeNo;
+                    $message .= "</br>繳費方式：" . ((isset($store[$encryptInfo['Store']])) ? $store[$encryptInfo['Store']] : '');
+                    $message .= "</br>繳費代號：" . $PayNo;
+                    $message .= "</br>繳費截止時間：" . $ExpireDate;
+                    break;
+                case '6': // ICP 愛金卡
+                    $message .= "</br>訂單狀態：" . $TradeStatus;
+                    $message .= "</br>UNi序號：" . $TradeNo;
+                    $message .= "</br>愛金卡交易序號：" . $PayNo;
+                    $message .= "</br>付款日期時間：" . ((isset($encryptInfo['PayTime'])) ? $encryptInfo['PayTime'] : '');
+                    break;
+                default: // 預設顯示資訊
+                    $message .= "</br>訂單狀態：" . $TradeStatus;
+                    $message .= "</br>UNi序號：" . $TradeNo;
+                    break;
+            }
         }
         return $message;
     }
